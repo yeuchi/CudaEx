@@ -1,5 +1,5 @@
 # CudaEx
-Enjoyed NVIDIA Jetson Nano face detection exercises back in 2021.
+Enjoyed NVIDIA Jetson Nano face detection python exercises back in 2021.
 
 https://www.linkedin.com/posts/ct-yeung-a32b215_nvidia-jetson-nano-course-is-the-best-value-activity-6738862901009948672-_L_j?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAEOQoYBbuGCgaJI5WK2FKuUCRaNMEkN4b4
 
