@@ -1,6 +1,9 @@
 # CudaEx
 Enjoyed NVIDIA Jetson Nano face detection python exercises back in 2021.
 
+<img width="579" height="327" alt="Screenshot 2026-09-13 at 7 18 15 PM" src="https://github.com/user-attachments/assets/381c6569-4961-4fdf-83f7-3231fd343c9f" />
+
+
 https://www.linkedin.com/posts/ct-yeung-a32b215_nvidia-jetson-nano-course-is-the-best-value-activity-6738862901009948672-_L_j?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAEOQoYBbuGCgaJI5WK2FKuUCRaNMEkN4b4
 
 <img width="400"  alt="Screenshot 2026-09-13 at 4 54 04 PM" src="https://github.com/user-attachments/assets/7251aa92-49de-496d-96f7-9f829cb1b93a" />
