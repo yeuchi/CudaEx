@@ -1,0 +1,51 @@
+
+class NNC
+{
+public:		// constructor / destructor
+
+	NNC();
+	~NNC();
+
+public:		// root methods
+
+	void	Param(float, int);						// change nnc structure
+
+	int		LoadWts(char *);						// file -> memory
+	int		SaveWts(char *);						// memory -> file
+	int		MakeWts();								// random generation
+
+	void	FwdProp();								// forward propagation
+	void	BckProp();								// find each node's errors
+	void	AdjWts();								// back propagation
+
+private:	// sub: methods
+
+	double	absol(double);							// magnitude
+	double	Lin_func(double);						// linear filter
+	double  Sig_func(double);						// sigmoid filter
+
+public:		// variables from NNCview.cpp
+
+	int		nWts;									// number of weigths
+	int		nofN;									// number of nodes
+	int		func;									// filter type for each layer's output
+
+	double	Er, Eg, Eb;								// mean error (P - out)
+	double	mEr, mEg, mEb;							// maximum magnitude error
+	double	rt;										// learning rate per layer
+
+	BYTE	*in_img, *de_img;						// pointer to input and desire images
+
+private:	// internal variables
+
+	int		iErr;									// error value
+	DWORD	len;									// length of wts file
+	
+	double	*in, *out;								// input & output layer
+	double	*hid;									// hidden layers
+	double	*P;										// desire output
+	double	*E;										// derivative of error at layer
+	
+	double	*Wts;									// weights
+	double	e;										// natural log value
+};

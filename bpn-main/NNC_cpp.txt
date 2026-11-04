@@ -1,0 +1,321 @@
+ // =============================================================
+//	MODULE:			NNC.CPP
+//
+//	DESCRIPTION:	back propagation neural net for color mapping
+//					this is a 3 layer nnc, 1 hidden layer only!!!
+//					number of nodes are dynamically created
+//
+//	AUTHOUR:		Yeung, CT
+//
+//	HISTORY:		10Jun96		Birth					CTY
+// =============================================================
+
+#include "stdafx.h"												// for random #
+#include <time.h>														
+#include <math.h>
+#include "NNC.H"
+
+// =============================================================
+//	Initialization
+// =============================================================
+NNC::NNC()
+{
+	e		= 2.718281828;										// natural log value
+	rt		= 1;												// learning rate
+	nofN	= 1;												// number of neurons
+	nWts	= nofN * 3 * 2;										// 3 inputs, 3 outputs
+	
+	Wts		= new double [nWts];								// weights
+	in		= new double [3];									// input color
+	hid		= new double [nofN];								// hidden layer
+	out		= new double [3];									// output color
+}
+
+NNC::~NNC()
+{
+	delete Wts;
+	delete in;
+	delete out;
+	delete hid;
+}
+
+// =============================================================
+//	change parameter, structure of NNC
+// =============================================================
+void NNC::Param(float nrt, int nofn)
+{
+	// nofn * 3		: number of weights between 1st layer
+	//				  and hidden layer
+	//	x 2			: accounts for hidden to output layer
+
+	nWts	= nofn * 3 * 2;										// number of weights
+	nofN	= nofn;												// number of nodes
+
+	delete	Wts;
+	delete	hid;
+
+	Wts		= new double[nWts];									
+	hid		= new double [nofN];
+}
+
+// =============================================================
+//	forward propagation!
+// =============================================================
+void NNC::FwdProp()
+{
+// --- prep data ---------------------------
+
+	for (int i = 0; i < 3; i ++)
+		in[i] = ( in[i] + 31.875 ) / 318.75;					// range 0.1 ~ 0.9	
+	
+// --- input -> hidden layer ---------------
+
+	int k = 0;
+
+	for (int j = 0; j < nofN; j ++)								// walk through all the nodes
+	{
+		hid[j] = 0;
+
+		for (i = 0; i < 3; i ++)								// walk through inputs
+		{
+			hid[j] += in[i] * Wts[k];
+			k ++;
+		}
+		if (func == 0)
+			hid[j] = Lin_func(hid[j]);							// linear filtering
+
+		else
+			hid[j] = Sig_func(hid[j]);							// sigmoid filtering
+	}
+
+// --- hidden -> output --------------------
+
+	for (j = 0; j < 3; j ++)									// walk through all output
+	{
+		out[j] = 0;
+
+		for (i = 0; i < nofN; i ++)								// walk through hidden layer
+		{
+			out[j] += hid[i] * Wts[k];
+			k ++;
+		}
+		if (func == 0)
+			hid[j] = Lin_func(hid[j]);							// linear filtering
+
+		else
+			hid[j] = Sig_func(hid[j]);							// sigmoid filtering
+	}
+}
+
+// =============================================================
+//	Calculate error of weights
+// =============================================================
+void NNC::BckProp()
+{
+	E		= new double [nofN + 3];							// error for output & hidden layer
+
+// --- prep desired output -----------------
+
+	for (int i = 0; i < 3; i ++)
+		P[i] = ( P[i] + 31.875 ) / 318.75;						// 0.1 ~ 0.9 range
+
+// --- error of output ---------------------
+
+	for (i = 0; i < 3; i ++)
+		E[i] = out[i] * (1 - out[i]) * (P[i] - out[i]);
+
+// --- error of hidden layer ---------------
+
+	double	buff;												// temp. node
+	int		pt1 = nWts - (nofN * 3);							// points to last weight of 1st layer
+
+	for ( i = 0; i < nWts; i ++)
+	{
+		buff = 0;
+
+		for (int j = 0; j <3; j ++)
+				buff += Wts[pt1 + (j * nofN) + i] * E[j];
+
+		E[i + 3] = hid[i] * (1 - hid[i] ) * buff;
+	}
+}
+
+// =============================================================
+//	weights refinement
+// =============================================================
+void NNC::AdjWts()
+{
+// --- wts change at output layer ----------
+
+	int		ptr = nWts - (nofN * 3);
+	int		i,j;
+
+	for (i = 0; i < nofN; i ++)
+		for (j = 0; j < 3; j ++)
+			Wts[ptr + j * nofN + i] += hid[i] * E[j] * rt;		// dm[i][j] += y[i] * E4[j] * rt;
+
+// --- wt change at hidden layer -----------
+
+	for (i = 0; i < nofN; i ++)
+		for (j = 0; j < 3; j ++)
+			Wts[j * nofN + i] += in[i] * E[j + 3] * rt;			// dm2[i][j] += x[i] * E3[j] * rt;
+
+	delete E;
+}
+
+// =============================================================
+//	returns positive value
+// =============================================================
+double NNC::absol(double value)
+{
+	if (value >= 0)												// when (+) or zero
+		return value;
+
+	else															
+		return (0.0 - value);									// return (+) when (-) 
+}
+
+// =============================================================
+//	output function
+// =============================================================
+double NNC::Lin_func(double out)
+{
+	if (out > .9)												// upper bound. clip
+		return .9;
+
+	else if (out < .1)											// lower bound. clip
+		return .1;
+	
+	else
+		return out;												// linear function
+}
+
+// =============================================================
+//	output function
+// =============================================================
+double NNC::Sig_func(double out)
+{
+	out = 1 / (1 + (double)pow(e, out));						// sigmoid function			
+	return out;
+}
+
+
+// =============================================================
+//	Load weights from file
+// =============================================================
+int NNC::LoadWts(char WtFile[])
+{
+		iErr = -1;
+	int a	 = 0;
+
+	char	*buffer;
+	char	*token;										
+	char	seps[] = "\n";										// separators
+
+// --- load ascii file ---------------------
+
+	CFile	cfile;
+
+	if (cfile.Open(WtFile, CFile::modeRead, NULL))
+	{
+		iErr = 0;
+
+		len = cfile.SeekToEnd();
+			  cfile.SeekToBegin();
+
+		buffer = new char[(int)len];
+		cfile.Read((char FAR*) buffer, (int)len);
+		cfile.Close();
+
+
+// --- ascii to float conversion -----------
+
+		token	= strtok(buffer, seps);							// set tokens in string
+
+		while (token != NULL)
+		{
+			Wts[a]	= (double)atof (token);
+			token	= strtok(NULL, seps);						// search string for tokens
+			a ++;
+		}
+		delete buffer;
+	}
+	return iErr;
+}
+
+// =============================================================
+//	Save weights to file
+// =============================================================
+int NNC::SaveWts(char WtFile[])
+{	
+	iErr	 = -5;												// if not written to file
+	int j;
+	int b;
+	char	*buf;
+
+// Purpose here is to output wts in the same organization 
+// as in the network
+
+// 16			- longest wt (14) + "\n'(2)
+// nwts			- number of wts
+
+	int k	= 0;
+	    j	= 0;
+	
+	int Len	= 16 * nWts;										// length of wts ascii file
+		buf	= new char[Len];
+
+// --- 1st & 2nd layer double to ascii -----
+
+	for (b = 0; b < nWts; b ++)
+	{
+		j += sprintf(buf + j, "%.14f", Wts[k]);
+		j += sprintf(buf + j, "\n");
+		k ++;													// increment to next wts	
+	}
+
+// --- output to file ----------------------
+
+	CFile	cfile;
+
+	if (cfile.Open(WtFile, CFile::modeCreate | CFile::modeWrite, NULL))
+	{
+		cfile.Write((char FAR*)buf, j);
+		cfile.Close();
+
+		iErr = 0;
+	}
+	delete buf;
+
+	return iErr;
+}
+
+// =============================================================
+//	Generate weights (+-.5) from random generator
+// =============================================================
+int NNC::MakeWts()
+{
+	int		a;
+	int		sign  = 0;
+	double	quant = 65534;										// integer entire range
+
+	srand ((unsigned) time (NULL));								// seed for random #
+
+
+	for (a = 0; a < nWts; a ++)
+	{
+		sign = rand() % 2;
+
+		if (sign != 0)		sign = -1;							// odd  = (-)
+		else				sign = 1;							// even = (+)
+
+		Wts[a] = (double) rand() / quant * (double)sign;
+	}
+
+	return iErr;
+}
+
+
+
+
+
