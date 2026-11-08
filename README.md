@@ -14,6 +14,8 @@ Training generally took 4+ hours.
 
 ## RGB test image generation
 Generates a raw binary image from (0,0,0) -> (255,255,255)
+This is a full color gamut RGB input for a look up table.
+
 > ./rgb 
 <img width="1000" alt="Screenshot 2026-11-08 at 9 28 34 AM" src="https://github.com/user-attachments/assets/3a7e80d7-f35a-45db-954b-0f2521041e7e" />
 
