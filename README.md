@@ -12,7 +12,7 @@ Original Back propagation neural network (1 hidden layer) for color mapping from
 It was written to run on a CPU. 
 Training generally took 4+ hours.
 
-## RGB image generation
+## RGB test image generation
 Generates a raw binary image from (0,0,0) -> (255,255,255)
 > ./rgb 
 <img width="1000" alt="Screenshot 2026-11-08 at 9 28 34 AM" src="https://github.com/user-attachments/assets/3a7e80d7-f35a-45db-954b-0f2521041e7e" />
