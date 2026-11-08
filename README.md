@@ -23,9 +23,9 @@ This is a full color gamut RGB input for a look up table.
 1. Stephen Smith's Blog, Playing with CUDA on My NVIDIA Jetson Nano, June 20, 2020
 https://smist08.wordpress.com/2019/04/03/playing-with-cuda-on-my-nvidia-jetson-nano/
 
-2. NNC Color Mapping
+2. NNC Color Mapping \
 https://library.imaging.org/cic/articles/1/1/art00010
 
-3.Variable Rectilinear interpolation
+3. Variable Rectilinear interpolation \
 https://www.imaging.org/common/uploaded%20files/pdfs/Papers/1998/RP-0-69/2210.pdf
 
