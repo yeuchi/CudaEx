@@ -1,10 +1,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "support.h"
 
-void generateRGBImage(unsigned char *rgb) {
+/*
+ * Generate a RGB image 25x25x25
+ */
+void generateRGBImage(unsigned char *rgb)   // [in] rgb data
+{
     int i = 0;
     for (int r=0; r< 25; r++) {
         for (int g=0; g< 25; g++) {
@@ -25,12 +28,20 @@ void generateRGBImage(unsigned char *rgb) {
     }
 }
 
-void removeFile(char* file_name)
+/*
+ * Delete a file
+ */
+void removeFile(char* file_name)            // [in] filename and path
 {
     remove(file_name);
 }
 
-void writeTextFile(unsigned char *rgb, int size, char* file_name)
+/*
+ * Write a Text file
+ */
+void writeTextFile(unsigned char *rgb,      // [in] rgb data
+                    int size,               // [in] rgb data array size in bytes
+                    char* file_name)        // [in] filename and path
 {
     FILE* file = fopen(file_name, "w");
     for (unsigned i = 0; i < size; i++) {
@@ -39,7 +50,12 @@ void writeTextFile(unsigned char *rgb, int size, char* file_name)
     fclose(file);
 }
 
-void writeBinaryFile(unsigned char *rgb, int size, char* file_name)
+/*
+ * Write a binary file
+ */
+void writeBinaryFile(unsigned char *rgb,    // [in] rgb data
+                    int size,               // [in] rgb data array size in bytes
+                    char* file_name)        // [in] filename and path
 {
     FILE* file = fopen(file_name, "wb");
     size_t elements_written = fwrite(rgb, sizeof(unsigned char), size, file);
@@ -47,7 +63,12 @@ void writeBinaryFile(unsigned char *rgb, int size, char* file_name)
     fclose(file);
 }
 
-void readBinaryFile(unsigned char *buffer, int size, char* file_name)
+/*
+ * Read a binary file
+ */
+void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
+                    int size, char*         // [in] array size in bytes
+                    file_name)              // [in] filename and path
 {
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
@@ -75,6 +96,17 @@ void readBinaryFile(unsigned char *buffer, int size, char* file_name)
 
     // 6. Clean up
     fclose(file);
+}
+
+/*
+ * Compare 2 image arrays for differences
+ */
+void compareArrays(unsigned char *rgb_orig, unsigned char *rgb_read, int size) {
+        for(int i=0; i<RGB_ARRAY_SIZE; i++){
+        if(rgb_orig[i] != rgb_read[i]) {
+            printf("image diff: rgb_orig[%d] rgb_read[%d]\n", i, rgb_orig[i], i, rgb_read[i]);
+        }
+    }    
 }
 
 void startTime(Timer* timer) {
