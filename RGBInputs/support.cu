@@ -8,23 +8,25 @@
  */
 void generateRGBImage(unsigned char *rgb)   // [in] rgb data
 {
+    printf("\n\ngenerateRGBImage() \n");
+
     int i = 0;
     for (int r=0; r< 25; r++) {
         for (int g=0; g< 25; g++) {
             for (int b=0; b< 25; b++) {
                 if(b % 10 == 0){
-                printf("[r:%d g:%d b:%d] ", r, g, b);
-                rgb[i] = r;
-                i+=1;
-                rgb[i] = g;
-                i+=1;
-                rgb[i] = b;
-                i+=1;
+                    //printf("[r:%d g:%d b:%d] ", r, g, b);
+                    rgb[i] = r;
+                    i+=1;
+                    rgb[i] = g;
+                    i+=1;
+                    rgb[i] = b;
+                    i+=1;
                 }
             }
-            printf("\n\n g:%d \n", g);
+           // printf("\n\n g:%d \n", g);
         }
-        printf("\n\n r:%d \n", r);
+        //printf("\n\n r:%d \n", r);
     }
 }
 
@@ -33,6 +35,7 @@ void generateRGBImage(unsigned char *rgb)   // [in] rgb data
  */
 void removeFile(char* file_name)            // [in] filename and path
 {
+    printf("\n\nremoveFile() %s\n", file_name);
     remove(file_name);
 }
 
@@ -43,6 +46,8 @@ void writeTextFile(unsigned char *rgb,      // [in] rgb data
                     int size,               // [in] rgb data array size in bytes
                     char* file_name)        // [in] filename and path
 {
+    printf("\n\nwriteTextFile() %s\n", file_name);
+
     FILE* file = fopen(file_name, "w");
     for (unsigned i = 0; i < size; i++) {
         fprintf(file, "%f, ", rgb[i]);
@@ -57,6 +62,8 @@ void writeBinaryFile(unsigned char *rgb,    // [in] rgb data
                     int size,               // [in] rgb data array size in bytes
                     char* file_name)        // [in] filename and path
 {
+    printf("\n\nwriteBinaryFile() %s\n", file_name);
+
     FILE* file = fopen(file_name, "wb");
     size_t elements_written = fwrite(rgb, sizeof(unsigned char), size, file);
     printf("elements written: %zu\n",elements_written);
@@ -70,6 +77,8 @@ void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
                     int size, char*         // [in] array size in bytes
                     file_name)              // [in] filename and path
 {
+    printf("\n\nreadBinaryFile() %s\n", file_name);
+
     FILE *file = fopen(file_name, "rb");
     if (file == NULL) {
         printf("Error opening file\n");
@@ -101,8 +110,12 @@ void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
 /*
  * Compare 2 image arrays for differences
  */
-void compareArrays(unsigned char *rgb_orig, unsigned char *rgb_read, int size) {
-        for(int i=0; i<RGB_ARRAY_SIZE; i++){
+void compareArrays( unsigned char *rgb_orig,    // [in] 1st array 
+                    unsigned char *rgb_read,    // [in] 2nd array
+                    int size) {                 // [in] array size
+    printf("\n\ncompareArrays() \n");
+
+        for(int i=0; i<size; i++){
         if(rgb_orig[i] != rgb_read[i]) {
             printf("image diff: rgb_orig[%d] rgb_read[%d]\n", i, rgb_orig[i], i, rgb_read[i]);
         }

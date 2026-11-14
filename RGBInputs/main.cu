@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "support.h"
-//#include <gmac/cuda.h>
 
 void deviceFunction();
 
@@ -15,43 +14,50 @@ int main (int argc, char *argv[])
     printf("\nSetting up the problem..."); fflush(stdout);
     startTime(&timer);
 
-    char *RGB_FILE_PATH = "rgb.raw";
+    // Look up tables
+    char *SRC_LUT_FILE_PATH = "src_lut.raw";
+    char *DES_LUT_FILE_PATH = "des_lut.raw";
     int NUM_PIXELS = 25 * 25 * 25;
-    int PIXEL_SIZE = sizeof(unsigned char) * 3;
-    unsigned char *rgb_orig;
-    unsigned char *rgb_read;
-
-    int RGB_ARRAY_SIZE = sizeof(unsigned char)*NUM_PIXELS*PIXEL_SIZE;
-    rgb_orig = (unsigned char*) malloc( RGB_ARRAY_SIZE );
-    rgb_read = (unsigned char*) malloc( RGB_ARRAY_SIZE );
+    int NUM_COLORS = 3;
+    int PIXEL_SIZE = sizeof(unsigned char) * NUM_COLORS;
+    int LUT_ARRAY_SIZE = sizeof(unsigned char)*NUM_PIXELS*PIXEL_SIZE;
+    unsigned char *src_lut = (unsigned char*) malloc( LUT_ARRAY_SIZE );
+    unsigned char *des_lut = (unsigned char*) malloc( LUT_ARRAY_SIZE );
 
     /*
      * Delete prexist rgb.raw file
      */
-    removeFile(RGB_FILE_PATH);
+    removeFile(SRC_LUT_FILE_PATH);
 
     /*
      * Generate a rgb.raw file
      */
-    generateRGBImage(rgb_orig);
+    generateRGBImage(src_lut);
     
     /*
      * Write rgb.raw file
      */
-    writeBinaryFile(rgb_orig, RGB_ARRAY_SIZE, RGB_FILE_PATH);
+    writeBinaryFile(src_lut, LUT_ARRAY_SIZE, SRC_LUT_FILE_PATH);
 
     /*
      * Read rgb.raw file -- change to look up table file someday ?
+     * !! Change path to point at DES_LUT_FILE_PATH !!
      */
-    readBinaryFile(rgb_read, RGB_ARRAY_SIZE, RGB_FILE_PATH);
+    readBinaryFile(des_lut, LUT_ARRAY_SIZE, SRC_LUT_FILE_PATH);
 
-    for(int i=0; i<RGB_ARRAY_SIZE; i++){
-        if(rgb_orig[i] != rgb_read[i]) {
-            printf("image diff: rgb_orig[%d] rgb_read[%d]\n", i, rgb_orig[i], i, rgb_read[i]);
-        }
-    }
 
-    //load_file_gmac("rgb.raw", RGB_ARRAY_SIZE);
+
+    /*
+     * Do Image processing with above LUTs (or profiles info or BPN weights)
+     */
+    char *SRC_IMG_FILE_PATH = "src_img.raw";
+    char *DES_IMG_FILE_PATH = "des_img.raw";
+    int IMAGE_WIDTH = 1000;
+    int IMAGE_HEIGHT = 1000;
+    int IMAGE_SIZE = IMAGE_WIDTH * IMAGE_HEIGHT * PIXEL_SIZE;
+    unsigned char *image = (unsigned char*) malloc( IMAGE_SIZE );
+
+   // readBinaryFile(image, IMAGE_SIZE, SRC_IMG_FILE_PATH);
 
     stopTime(&timer); 
     printf("%f s\n", elapsedTime(timer));
@@ -76,7 +82,7 @@ int main (int argc, char *argv[])
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
 
-    deviceFunction();
+   // deviceLookUpTable(src_lut, des_lut, RGB_ARRAY_SIZE, image, IMAGE_SIZE);
     
     cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess) FATAL("Unable to launch kernel");
@@ -87,50 +93,14 @@ int main (int argc, char *argv[])
     printf("Copying data from device to host..."); fflush(stdout);
     startTime(&timer);
 
-
     cudaDeviceSynchronize();
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
     // Free memory ------------------------------------------------------------
 
-    free(rgb_orig);
-    free(rgb_read);
+    free(src_lut);
+    free(des_lut);
+    free(image);
     return 0;
 }
-
-// void load_file_gmac(const char* filename, size_t num_bytes) {
-//     unsigned char* rgb = NULL;
-//     // Allocate shared CPU/GPU pointer via GMAC
-//     gmacMalloc((void**)&rgb, num_bytes);
-
-//     // Read file directly into the pointer using standard C host I/O
-//     FILE* fp = fopen(filename, "rb");
-//     if (fp != NULL) {
-//         fread(rgb, 1, num_bytes, fp);
-//         fclose(fp);
-//     }
-
-//     int i = 0;
-//     for (int r=0; r< 256; r++) {
-//         for (int g=0; g< 256; g++) {
-//             for (int b=0; b< 256; b++) {
-//                 printf("[r:%d g:%d b:%d] ", r, g, b);
-//                 rgb[i] = r;
-//                 i+=1;
-//                 rgb[i] = g;
-//                 i+=1;
-//                 rgb[i] = b;
-//                 i+=1;
-//             }
-//             printf("\n\n g:%d \n", g);
-//         }
-//         printf("\n\n r:%d \n", r);
-//     }
-
-//     // Launch kernel directly—no cudaMemcpy() required
-//     //myKernel<<<grid, block>>>(data);
-//     //cudaDeviceSynchronize();
-
-//     //gmacFree(data);
-// }
 
