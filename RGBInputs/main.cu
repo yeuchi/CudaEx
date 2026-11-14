@@ -25,9 +25,24 @@ int main (int argc, char *argv[])
     rgb_orig = (unsigned char*) malloc( RGB_ARRAY_SIZE );
     rgb_read = (unsigned char*) malloc( RGB_ARRAY_SIZE );
 
+    /*
+     * Delete prexist rgb.raw file
+     */
     removeFile(RGB_FILE_PATH);
+
+    /*
+     * Generate a rgb.raw file
+     */
     generateRGBImage(rgb_orig);
+    
+    /*
+     * Write rgb.raw file
+     */
     writeBinaryFile(rgb_orig, RGB_ARRAY_SIZE, RGB_FILE_PATH);
+
+    /*
+     * Read rgb.raw file -- change to look up table file someday ?
+     */
     readBinaryFile(rgb_read, RGB_ARRAY_SIZE, RGB_FILE_PATH);
 
     for(int i=0; i<RGB_ARRAY_SIZE; i++){
