@@ -15,6 +15,8 @@ extern "C" {
 void generateRGBImage(unsigned char *rgb);
 void writeTextFile(unsigned char *rgb, int size, char* file_name);
 void writeBinaryFile(unsigned char *rgb, int size, char* file_name);
+void readBinaryFile(unsigned char *rgb, int size, char* file_name);
+void removeFile(char* file_name);
 
 void startTime(Timer* timer);
 void stopTime(Timer* timer);

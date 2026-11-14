@@ -6,9 +6,10 @@
 
 void generateRGBImage(unsigned char *rgb) {
     int i = 0;
-    for (int r=0; r< 256; r++) {
-        for (int g=0; g< 256; g++) {
-            for (int b=0; b< 256; b++) {
+    for (int r=0; r< 25; r++) {
+        for (int g=0; g< 25; g++) {
+            for (int b=0; b< 25; b++) {
+                if(b % 10 == 0){
                 printf("[r:%d g:%d b:%d] ", r, g, b);
                 rgb[i] = r;
                 i+=1;
@@ -16,6 +17,7 @@ void generateRGBImage(unsigned char *rgb) {
                 i+=1;
                 rgb[i] = b;
                 i+=1;
+                }
             }
             printf("\n\n g:%d \n", g);
         }
@@ -23,19 +25,56 @@ void generateRGBImage(unsigned char *rgb) {
     }
 }
 
+void removeFile(char* file_name)
+{
+    remove(file_name);
+}
+
 void writeTextFile(unsigned char *rgb, int size, char* file_name)
 {
-    FILE* output = fopen(file_name, "w");
+    FILE* file = fopen(file_name, "w");
     for (unsigned i = 0; i < size; i++) {
-        fprintf(output, "%f, ", rgb[i]);
+        fprintf(file, "%f, ", rgb[i]);
     }
+    fclose(file);
 }
 
 void writeBinaryFile(unsigned char *rgb, int size, char* file_name)
 {
-    FILE* output = fopen(file_name, "wb");
-    size_t elements_written = fwrite(rgb, sizeof(float), size, output);
-    printf("elements writte: %zu\n",elements_written);
+    FILE* file = fopen(file_name, "wb");
+    size_t elements_written = fwrite(rgb, sizeof(unsigned char), size, file);
+    printf("elements written: %zu\n",elements_written);
+    fclose(file);
+}
+
+void readBinaryFile(unsigned char *buffer, int size, char* file_name)
+{
+    FILE *file = fopen(file_name, "rb");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return;
+    }
+
+    // 2. Find the file size
+    fseek(file, 0, SEEK_END);      // Move pointer to the end of the file
+    long fileSize = ftell(file);   // Get current pointer position (size in bytes)
+    fseek(file, 0, SEEK_SET);      // Reset pointer back to the beginning
+
+    printf("fileSize: %ld expected:%d \n", fileSize, size);
+    if(fileSize > size) {
+        printf("File too large\n");
+        return;
+    }
+
+    size_t bytesRead = fread(buffer, sizeof(unsigned char), fileSize, file);
+    printf("bytesRead: %zu fileSize:%ld\n", bytesRead, fileSize);
+
+    if (bytesRead != fileSize) {
+        printf("Wrong size read \n");
+    }
+
+    // 6. Clean up
+    fclose(file);
 }
 
 void startTime(Timer* timer) {
