@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "support.h"
 
+
+
 /*
  * Generate a RGB image 25x25x25
  */
@@ -57,6 +59,7 @@ void writeTextFile(unsigned char *rgb,      // [in] rgb data
 
 /*
  * Write a binary file
+ * https://lmcnulty.me/words/bmp-output/
  */
 void writeBinaryFile(unsigned char *rgb,    // [in] rgb data
                     int size,               // [in] rgb data array size in bytes
@@ -107,9 +110,12 @@ void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
     fclose(file);
 }
 
-unsigned char* readBmp( int *width, 
-                        int *height,
-                        int *rowSize,
+/*
+ * Read a bitmap file
+ */
+unsigned char* readBmp( int *width,             // [out] image width in pixels
+                        int *height,            // [out] image height in pixels
+                        int *rowSize,           // [out] image row byte count
                         char* file_name)        // [in] filename and path
 {
     printf("\n\nreadBmp() %s\n", file_name);
@@ -155,9 +161,46 @@ unsigned char* readBmp( int *width,
     fread(data, sizeof(unsigned char), dataSize, f);
     fclose(f);
 
-    printf("width: %d height: %d bpp: %d rowSize: %d dataSize: %zu\n", *width, *height, (int)bpp, *rowSize, dataSize);
-    printf("\n\n");
+    printf("width: %d height: %d bpp: %d rowSize: %d dataSize: %zu\n\n", *width, *height, (int)bpp, *rowSize, dataSize);
     return data;
+}
+
+/*
+ * Write Bitmap file 
+ */
+void writeBmp(  char* file_name,        // [in] destination file name path
+                unsigned char* data,    // [in] image pixels
+                int width,              // [in] image width
+                int height,             // [in] image height
+                int rowStride) {        // [in] row size in bytes
+    printf("\n\nwriteBMP() %s\n", file_name);
+
+    uint32_t dataSize = rowStride * height;
+
+    BMPFileHeader fileHeader = {0};
+    fileHeader.bfType = 0x4D42;
+    fileHeader.bfSize = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + dataSize;
+    fileHeader.bfOffBits = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
+
+    BMPInfoHeader infoHeader = {0};
+    infoHeader.biSize = sizeof(BMPInfoHeader);
+    infoHeader.biWidth = width;
+    infoHeader.biHeight = -height; // Negative height writes top-to-bottom
+    infoHeader.biPlanes = 1;
+    infoHeader.biBitCount = 24;
+    infoHeader.biCompression = 0;
+    infoHeader.biSizeImage = dataSize;
+
+    FILE* fp = fopen(file_name, "wb");
+    if (!fp) {
+        perror("Failed to open file");
+        return;
+    }
+    fwrite(&fileHeader, sizeof(fileHeader), 1, fp);
+    fwrite(&infoHeader, sizeof(infoHeader), 1, fp);
+    fwrite(data, 1, dataSize, fp);
+    fclose(fp);
+    printf("image written \n");
 }
 
 /*

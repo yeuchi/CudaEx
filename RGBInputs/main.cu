@@ -101,6 +101,9 @@ int main (int argc, char *argv[])
     startTime(&timer);
 
     cudaDeviceSynchronize();
+
+    writeBmp("processed.bmp", image, width, height, rowSize);
+
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
     // Free memory ------------------------------------------------------------

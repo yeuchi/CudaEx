@@ -2,6 +2,7 @@
 #define __FILEH__
 
 #include <sys/time.h>
+#include <stdint.h>
 
 typedef struct {
     struct timeval startTime;
@@ -18,10 +19,33 @@ void writeBinaryFile(unsigned char *rgb, int size, char* file_name);
 void readBinaryFile(unsigned char *rgb, int size, char* file_name);
 void removeFile(char* file_name);
 unsigned char* readBmp(int *width, int *height, int *rowSize, char* file_name);
-
+void writeBmp(  char* file_name, unsigned char* data, int widith, int height, int rowStride);
 void startTime(Timer* timer);
 void stopTime(Timer* timer);
 float elapsedTime(Timer timer);
+
+typedef struct {
+    uint16_t bfType;      // Magic identifier: "BM" (0x4D42)
+    uint32_t bfSize;      // Total file size in bytes
+    uint16_t bfReserved1; // Reserved (0)
+    uint16_t bfReserved2; // Reserved (0)
+    uint32_t bfOffBits;   // Offset to pixel data (54 bytes)
+} BMPFileHeader;
+
+typedef struct {
+    uint32_t biSize;          // Header size (40 bytes)
+    int32_t  biWidth;         // Image width in pixels
+    int32_t  biHeight;        // Image height (negative = top-down)
+    uint16_t biPlanes;        // Color planes (must be 1)
+    uint16_t biBitCount;      // Bits per pixel (24 for RGB)
+    uint32_t biCompression;   // Compression (0 = BI_RGB uncompressed)
+    uint32_t biSizeImage;     // Image data size in bytes
+    int32_t  biXPelsPerMeter; // Horizontal resolution (0)
+    int32_t  biYPelsPerMeter; // Vertical resolution (0)
+    uint32_t biClrUsed;       // Colors in palette (0)
+    uint32_t biClrImportant;  // Important colors (0)
+} BMPInfoHeader;
+
 #ifdef __cplusplus
 }
 #endif
