@@ -17,6 +17,7 @@ void writeTextFile(unsigned char *rgb, int size, char* file_name);
 void writeBinaryFile(unsigned char *rgb, int size, char* file_name);
 void readBinaryFile(unsigned char *rgb, int size, char* file_name);
 void removeFile(char* file_name);
+unsigned char* readBmp(int *width, int *height, int *rowSize, char* file_name);
 
 void startTime(Timer* timer);
 void stopTime(Timer* timer);

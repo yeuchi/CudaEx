@@ -74,8 +74,8 @@ void writeBinaryFile(unsigned char *rgb,    // [in] rgb data
  * Read a binary file
  */
 void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
-                    int size, char*         // [in] array size in bytes
-                    file_name)              // [in] filename and path
+                    int size,               // [in] array size in bytes
+                    char* file_name)        // [in] filename and path
 {
     printf("\n\nreadBinaryFile() %s\n", file_name);
 
@@ -105,6 +105,59 @@ void readBinaryFile(unsigned char *buffer,  // [in] empty allocated array
 
     // 6. Clean up
     fclose(file);
+}
+
+unsigned char* readBmp( int *width, 
+                        int *height,
+                        int *rowSize,
+                        char* file_name)        // [in] filename and path
+{
+    printf("\n\nreadBmp() %s\n", file_name);
+    
+    FILE* f = fopen(file_name, "rb");
+    if (!f) {
+        printf("Error: Could not open file %s\n", file_name);
+        return NULL;
+    }
+
+    unsigned char header[54];
+    if (fread(header, sizeof(unsigned char), 54, f) != 54) {
+        printf("Error: Invalid BMP header\n");
+        fclose(f);
+        return NULL;
+    }
+
+    // Verify 'BM' signature
+    if (header[0] != 'B' || header[1] != 'M') {
+        printf("Error: Not a valid BMP file\n");
+        fclose(f);
+        return NULL;
+    }
+
+    // Extract image dimensions and data offset from header
+    uint32_t dataOffset = *(uint32_t*)&header[10];
+    *width              = *(int32_t*)&header[18];
+    *height             = *(int32_t*)&header[22];
+    uint16_t bpp        = *(uint16_t*)&header[28];
+
+    if (bpp != 24) {
+        printf("Error: Only 24-bit uncompressed BMPs are supported\n");
+        fclose(f);
+        return NULL;
+    }
+
+    // BMP rows are padded to the nearest 4-byte boundary
+    *rowSize = ((*width * 3 + 3) / 4) * 4;
+    size_t dataSize = (*rowSize) * abs(*height);
+
+    unsigned char* data = (unsigned char*)malloc(dataSize);
+    fseek(f, dataOffset, SEEK_SET);
+    fread(data, sizeof(unsigned char), dataSize, f);
+    fclose(f);
+
+    printf("width: %d height: %d bpp: %d rowSize: %d dataSize: %zu\n", *width, *height, (int)bpp, *rowSize, dataSize);
+    printf("\n\n");
+    return data;
 }
 
 /*

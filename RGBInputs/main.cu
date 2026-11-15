@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include "support.h"
 
-void deviceFunction();
+void deviceLookUpTable(unsigned char* src_lut,      // [in] source look up table
+                        unsigned char* des_lut,     // [in] destination look up table
+                        int lut_size,               // [in] look up table size
+                        unsigned char* image,       // [in/out] image pixels
+                        int width,                  // [in] image width
+                        int height,                 // [in] image height
+                        int rowSize);               // [in] 1 row of image size
 
 int main (int argc, char *argv[])
 {
@@ -50,14 +56,15 @@ int main (int argc, char *argv[])
     /*
      * Do Image processing with above LUTs (or profiles info or BPN weights)
      */
-    char *SRC_IMG_FILE_PATH = "src_img.raw";
-    char *DES_IMG_FILE_PATH = "des_img.raw";
-    int IMAGE_WIDTH = 1000;
-    int IMAGE_HEIGHT = 1000;
-    int IMAGE_SIZE = IMAGE_WIDTH * IMAGE_HEIGHT * PIXEL_SIZE;
-    unsigned char *image = (unsigned char*) malloc( IMAGE_SIZE );
+    // char *SRC_IMG_FILE_PATH = "src_img.raw";
+    // int IMAGE_WIDTH = 1000;
+    // int IMAGE_HEIGHT = 1000;
+    // int IMAGE_SIZE = IMAGE_WIDTH * IMAGE_HEIGHT * PIXEL_SIZE;
+    // unsigned char *image = (unsigned char*) malloc( IMAGE_SIZE );
+    // readBinaryFile(image, IMAGE_SIZE, SRC_IMG_FILE_PATH);
 
-   // readBinaryFile(image, IMAGE_SIZE, SRC_IMG_FILE_PATH);
+    int width, height, rowSize;
+    unsigned char *image = readBmp(&width, &height, &rowSize, argv[1]);
 
     stopTime(&timer); 
     printf("%f s\n", elapsedTime(timer));
@@ -82,7 +89,7 @@ int main (int argc, char *argv[])
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
 
-   // deviceLookUpTable(src_lut, des_lut, RGB_ARRAY_SIZE, image, IMAGE_SIZE);
+    deviceLookUpTable(src_lut, des_lut, LUT_ARRAY_SIZE, image, width, height, rowSize);
     
     cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess) FATAL("Unable to launch kernel");
@@ -90,7 +97,7 @@ int main (int argc, char *argv[])
 
     // Copy device variables from host ----------------------------------------
 
-    printf("Copying data from device to host..."); fflush(stdout);
+    printf("Copying data from device to host...\n"); fflush(stdout);
     startTime(&timer);
 
     cudaDeviceSynchronize();
