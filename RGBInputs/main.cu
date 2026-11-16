@@ -8,12 +8,27 @@ void deviceLookUpTable(unsigned char* src_lut,      // [in] source look up table
                         unsigned char* image,       // [in/out] image pixels
                         int width,                  // [in] image width
                         int height,                 // [in] image height
-                        int rowSize);               // [in] 1 row of image size
+                        int rowSize,                        // [in] 1 row of image size
+                        int maxThreadsPerBlock,             // [in] max threads
+                        int maxThreadsPerMultiProcessor,    // [in] max threads / process
+                        int maxGridSize);                    // [in] max grid size
 
 int main (int argc, char *argv[])
 {
     Timer timer;
     cudaError_t cuda_ret;
+
+    // Read GPU capability ----------------------------------------------
+
+    int deviceId = 0; // Check the first GPU
+    cudaDeviceProp prop;
+    
+    // Fetch device properties
+    cudaError_t status = cudaGetDeviceProperties(&prop, deviceId);
+
+    int maxThreadsPerBlock = prop.maxThreadsPerBlock;
+    int maxThreadsPerMultiProcessor = prop.maxThreadsPerMultiProcessor;
+    int maxGridSize = prop.maxGridSize[0];
 
     // Initialize host variables ----------------------------------------------
 
@@ -51,8 +66,6 @@ int main (int argc, char *argv[])
      */
     readBinaryFile(des_lut, LUT_ARRAY_SIZE, SRC_LUT_FILE_PATH);
 
-
-
     /*
      * Do Image processing with above LUTs (or profiles info or BPN weights)
      */
@@ -89,7 +102,15 @@ int main (int argc, char *argv[])
     printf("Launching kernel..."); fflush(stdout);
     startTime(&timer);
 
-    deviceLookUpTable(src_lut, des_lut, LUT_ARRAY_SIZE, image, width, height, rowSize);
+    deviceLookUpTable(src_lut, 
+        des_lut, 
+        LUT_ARRAY_SIZE, 
+        image, width, 
+        height, 
+        rowSize,
+        maxThreadsPerBlock,
+        maxThreadsPerMultiProcessor,
+        maxGridSize);
     
     cuda_ret = cudaDeviceSynchronize();
 	if(cuda_ret != cudaSuccess) FATAL("Unable to launch kernel");
@@ -103,6 +124,16 @@ int main (int argc, char *argv[])
     cudaDeviceSynchronize();
 
     writeBmp("processed.bmp", image, width, height, rowSize);
+
+    stopTime(&timer); printf("%f s\n", elapsedTime(timer));
+
+    // Measure CPU Compute ----------------------------------------------------
+    printf("CPU Compute..."); fflush(stdout);
+    startTime(&timer);
+
+    /*
+     * TODO CPU Compute
+     */
 
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 

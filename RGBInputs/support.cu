@@ -204,6 +204,36 @@ void writeBmp(  char* file_name,        // [in] destination file name path
 }
 
 /*
+ * Do host CPU execution
+ */
+void hostLookUpTable(   unsigned char* src_lut,              // [in] source look up table
+                        unsigned char* des_lut,             // [in] destination look up table
+                        int lut_size,                       // [in] look up table size
+                        unsigned char* image,               // [in/out] image pixels
+                        int width,                          // [in] image width
+                        int height,                         // [in] image height
+                        int rowSize,                        // [in] 1 row of image size
+                        int maxThreadsPerBlock,             // [in] max threads
+                        int maxThreadsPerMultiProcessor,    // [in] max threads / process
+                        int maxGridSize)                    // [in] max grid size
+{
+    for(int y=0; y<height; y++) {
+        int yy = rowSize * y;
+        for (int x=0; x<width; x++) {
+            int i = x * 3 + yy;
+            unsigned char r = image[i];
+            unsigned char g = image[i+1];
+            unsigned char b = image[i+2];
+
+            /*
+             * TODO Look up table and computation
+             */
+
+        }
+    }
+}
+
+/*
  * Compare 2 image arrays for differences
  */
 void compareArrays( unsigned char *rgb_orig,    // [in] 1st array 
