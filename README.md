@@ -12,11 +12,14 @@ Original Back propagation neural network (1 hidden layer) for color mapping from
 It was written to run on a CPU. 
 Training generally took 4+ hours.
 
-## RGB test image generation
-Generates a raw binary image from (0,0,0) -> (255,255,255)
-This is a full color gamut RGB input for a look up table.
+## RGBInputs 
+1. Generates a raw binary from (0,0,0) -> (25,25,25); input look up table.
+2. Reads a raw binary destination look up table.
+3. Loads a specified bitmap for image processing.
+4. Call device function, call kernel.
+5. Save bitmap to file as 'processed.bmp'
 
-> ./rgb 
+> ./rgb snail.bmp
 <img width="1000" alt="Screenshot 2026-11-08 at 9 28 34 AM" src="https://github.com/user-attachments/assets/3a7e80d7-f35a-45db-954b-0f2521041e7e" />
 
 # Reference
