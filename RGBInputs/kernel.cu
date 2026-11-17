@@ -17,9 +17,26 @@ __global__ void kernel(unsigned char* src_lut,              // [in] source look 
                         int rowSize)                        // [in] 1 row of image size
 {
     //printf("\n\nkernel() \n");
+    int i = blockDim.x * blockIdx.x + threadIdx.x * 3 ; 
 
-    int i = blockDim.x * blockIdx.x + threadIdx.x ; 
+    /*
+     * Don't need src_lut if it is uniform 
+     */
+    if(i < height * rowSize - 2) {
+        unsigned char r = (unsigned char)(((float)image[i]/(float)255));
+        unsigned char g = (unsigned char)(((float)image[i+1]/(float)255));
+        unsigned char b = (unsigned char)(((float)image[i+2]/(float)255));
 
+        int i = (r * 25 * 25 + g * 25 + b) * 3;
+
+        unsigned char rr = des_lut[i];
+        unsigned char gg = des_lut[i+1];
+        unsigned char bb = des_lut[i+2];
+
+        image[i] = (unsigned char)((float)rr/(float)25*255);
+        image[i+1] = (unsigned char)((float)gg/(float)25*255);
+        image[i+2] = (unsigned char)((float)bb/(float)25*255);
+    }
 }
 
 /*
@@ -64,7 +81,12 @@ void deviceLookUpTable( unsigned char* src_lut,              // [in] source look
     if(cuda_ret != cudaSuccess) FATAL("Unable to copy memory to device_image");
 
     // INSERT CODE HERE
-    kernel<<<maxGridSize,maxThreadsPerBlock>>>(src_lut, des_lut, lut_size, image, width, height, rowSize);   
+    int imageSize = rowSize * height * 3;
+    int GridSizeNeeded = imageSize / maxThreadsPerBlock + 1;
+    /*
+     * !Need to handle image bigger than maxGridSize !
+     */
+    kernel<<<GridSizeNeeded,maxThreadsPerBlock>>>(device_src_lut, device_des_lut, lut_size, device_image, width, height, rowSize);   
     
     // host to device memory
     cuda_ret = cudaMemcpy(image, device_image, sizeof(unsigned char)*height*rowSize, cudaMemcpyDeviceToHost);
