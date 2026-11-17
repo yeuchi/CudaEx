@@ -20,7 +20,7 @@ Training generally took 4+ hours.
 5. Save bitmap to file as 'processed.bmp'
 
 > ./rgb snail.bmp
-<img width="1000" alt="Screenshot 2026-11-08 at 9 28 34 AM" src="https://github.com/user-attachments/assets/3a7e80d7-f35a-45db-954b-0f2521041e7e" />
+<img width="400" alt="Screenshot 2026-11-15 at 6 11 43 PM" src="https://github.com/user-attachments/assets/18fca256-2c46-45fd-9bcc-7e1fd498622b" />
 
 # Reference
 1. Stephen Smith's Blog, Playing with CUDA on My NVIDIA Jetson Nano, June 20, 2020
