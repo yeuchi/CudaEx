@@ -236,7 +236,14 @@ void hostLookUpTable(   unsigned char* src_lut,              // [in] source look
             unsigned char r = image[i];
             unsigned char g = image[i+1];
             unsigned char b = image[i+2];
+            //Concept, 
+            unsigned char interp_r = src_lut[r*3];
+            unsigned char interp_g = src_lut[g*3+1];
+            unsigned char interp_b = src_lut[b*3+2];
 
+            image[i] = des_lut[interp_r*3];
+            image[i+1] = des_lut[interp_g*3+1];
+            image[i+2] = des_lut[interp_b*3+2];
             /*
              * TODO Look up table and computation
              */

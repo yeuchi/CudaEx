@@ -62,9 +62,8 @@ int main (int argc, char *argv[])
 
     /*
      * Read rgb.raw file -- change to look up table file someday ?
-     * !! Change path to point at DES_LUT_FILE_PATH !!
      */
-    readBinaryFile(des_lut, LUT_ARRAY_SIZE, SRC_LUT_FILE_PATH);
+    readBinaryFile(des_lut, LUT_ARRAY_SIZE, DES_LUT_FILE_PATH);
 
     /*
      * Do Image processing with above LUTs (or profiles info or BPN weights)
@@ -131,9 +130,9 @@ int main (int argc, char *argv[])
     printf("CPU Compute..."); fflush(stdout);
     startTime(&timer);
 
-    /*
-     * TODO CPU Compute
-     */
+
+    void hostLookUpTable(unsigned char* src_lut, unsigned char* des_lut, int lut_size, unsigned char* image,
+                            int width, int height, int rowSize, int maxThreadsPerBlock, int maxThreadsPerMultiProcessor, int maxGridSize);
 
     stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
