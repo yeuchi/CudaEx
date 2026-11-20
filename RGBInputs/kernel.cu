@@ -23,19 +23,22 @@ __global__ void kernel(unsigned char* src_lut,              // [in] source look 
      * Don't need src_lut if it is uniform 
      */
     if(i < height * rowSize - 2) {
-        unsigned char r = (unsigned char)(((float)image[i]/(float)255));
-        unsigned char g = (unsigned char)(((float)image[i+1]/(float)255));
-        unsigned char b = (unsigned char)(((float)image[i+2]/(float)255));
 
-        int i = (r * 25 * 25 + g * 25 + b) * 3;
+        if(image[i] != 0 && image[i+1] != 0 && image[i+2] != 0) {
+            unsigned char r = (unsigned char)(((float)image[i]/(float)255));
+            unsigned char g = (unsigned char)(((float)image[i+1]/(float)255));
+            unsigned char b = (unsigned char)(((float)image[i+2]/(float)255));
 
-        unsigned char rr = des_lut[i];
-        unsigned char gg = des_lut[i+1];
-        unsigned char bb = des_lut[i+2];
+            int i = (r * 25 * 25 + g * 25 + b) * 3;
 
-        image[i] = (unsigned char)((float)rr/(float)25*255);
-        image[i+1] = (unsigned char)((float)gg/(float)25*255);
-        image[i+2] = (unsigned char)((float)bb/(float)25*255);
+            unsigned char rr = des_lut[i];
+            unsigned char gg = des_lut[i+1];
+            unsigned char bb = des_lut[i+2];
+
+            image[i] = 2; //(unsigned char)((float)rr/(float)25*255);
+            image[i+1] = 4; // (unsigned char)((float)gg/(float)25*255);
+            image[i+2] = 8; //(unsigned char)((float)bb/(float)25*255);
+        }
     }
 }
 

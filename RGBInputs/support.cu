@@ -141,6 +141,7 @@ unsigned char* readBmp( int *width,             // [out] image width in pixels
     }
 
     // Extract image dimensions and data offset from header
+    uint32_t fileSize = *(uint32_t*)&header[2];
     uint32_t dataOffset = *(uint32_t*)&header[10];
     *width              = *(int32_t*)&header[18];
     *height             = *(int32_t*)&header[22];
@@ -175,30 +176,41 @@ void writeBmp(  char* file_name,        // [in] destination file name path
                 int rowStride) {        // [in] row size in bytes
     printf("\n\nwriteBMP() %s\n", file_name);
 
+    int padding = rowStride - (width * 3);
     uint32_t dataSize = rowStride * height;
 
     BMPFileHeader fileHeader = {0};
-    fileHeader.bfType = 0x4D42;
-    fileHeader.bfSize = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + dataSize;
-    fileHeader.bfOffBits = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
+    //fileHeader.bfType = 0x4D42;
+    fileHeader.bfSize = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + dataSize+2;
+    fileHeader.bfOffBits = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + 2;
 
     BMPInfoHeader infoHeader = {0};
     infoHeader.biSize = sizeof(BMPInfoHeader);
     infoHeader.biWidth = width;
-    infoHeader.biHeight = -height; // Negative height writes top-to-bottom
+    infoHeader.biHeight = height; // Negative height writes top-to-bottom
     infoHeader.biPlanes = 1;
     infoHeader.biBitCount = 24;
     infoHeader.biCompression = 0;
     infoHeader.biSizeImage = dataSize;
+    infoHeader.biXPelsPerMeter = 2835;
+    infoHeader.biYPelsPerMeter = 2835;
+    infoHeader.biClrUsed - 0;
+    infoHeader.biClrImportant = 0;
 
     FILE* fp = fopen(file_name, "wb");
     if (!fp) {
         perror("Failed to open file");
         return;
     }
+    unsigned char BM[2] = {'B', 'M'};
+    fwrite(BM, 2, 1, fp);
     fwrite(&fileHeader, sizeof(fileHeader), 1, fp);
     fwrite(&infoHeader, sizeof(infoHeader), 1, fp);
     fwrite(data, 1, dataSize, fp);
+    if(padding > 0) {
+        uint8_t pad_bytes[3] = {0, 0, 0};
+        fwrite(pad_bytes, 1, padding, fp);
+    }
     fclose(fp);
     printf("image written \n");
 }
