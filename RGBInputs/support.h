@@ -35,7 +35,7 @@ void hostLookUpTable(   unsigned char* src_lut,              // [in] source look
                         int maxGridSize);
 
 typedef struct {
-    uint16_t bfType;      // Magic identifier: "BM" (0x4D42)
+    //uint16_t bfType;      // Magic identifier: "BM" (0x4D42)
     uint32_t bfSize;      // Total file size in bytes
     uint16_t bfReserved1; // Reserved (0)
     uint16_t bfReserved2; // Reserved (0)
