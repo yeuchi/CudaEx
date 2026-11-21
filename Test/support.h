@@ -13,7 +13,12 @@ typedef struct {
 extern "C" {
 #endif
 
-void generateRGBImage(unsigned char *rgb);
+void createRGBImage(unsigned char *rgb);
+void createGrayScale(unsigned char *image);
+void createRedScale(unsigned char *image);
+void createGreenScale(unsigned char *image);
+void createBlueScale(unsigned char *image);
+
 void writeTextFile(unsigned char *rgb, int size, char* file_name);
 void writeBinaryFile(unsigned char *rgb, int size, char* file_name);
 void readBinaryFile(unsigned char *rgb, int size, char* file_name);

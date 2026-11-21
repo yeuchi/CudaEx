@@ -51,9 +51,9 @@ int main (int argc, char *argv[])
     removeFile(SRC_LUT_FILE_PATH);
 
     /*
-     * Generate a rgb.raw file
+     * Create a rgb.raw file
      */
-    generateRGBImage(src_lut);
+    createRGBImage(src_lut);
     
     /*
      * Write rgb.raw file
@@ -66,7 +66,8 @@ int main (int argc, char *argv[])
     readBinaryFile(des_lut, LUT_ARRAY_SIZE, DES_LUT_FILE_PATH);
 
     /*
-     * Write lut as a bitmap
+     * Verify bitmap write/read 
+     * Use above lut as image
      */
     int width, height, rowSize;
 
@@ -87,8 +88,28 @@ int main (int argc, char *argv[])
     stopTime(&timer); 
     printf("%f s\n", elapsedTime(timer));
 
+    /*
+     * Generate Test images
+     */
+    width = 256;
+    rowSize = ((width * 3 + 3) / 4) * 4;
+    unsigned char *scale = (unsigned char*) malloc( 256*3 );
+    createGrayScale(scale);
+    writeBmp("gray.bmp", scale, 256, 1, rowSize);
+
+    createRedScale(scale);
+    writeBmp("red.bmp", scale, 256, 1, rowSize);
+
+    createGreenScale(scale);
+    writeBmp("green.bmp", scale, 256, 1, rowSize);
+
+    createBlueScale(scale);
+    writeBmp("blue.bmp", scale, 256, 1, rowSize);
+
+
     // Free memory ------------------------------------------------------------
 
+    free(scale);
     free(src_lut);
     free(des_lut);
     free(image);

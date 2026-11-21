@@ -8,9 +8,9 @@
 /*
  * Generate a RGB image 25x25x25
  */
-void generateRGBImage(unsigned char *rgb)   // [in] rgb data
+void createRGBImage(unsigned char *rgb)   // [in] rgb data
 {
-    printf("\n\ngenerateRGBImage() \n");
+    printf("\n\ncreateRGBImage() \n");
 
     int i = 0;
     for (int r=0; r< 25; r++) {
@@ -24,6 +24,58 @@ void generateRGBImage(unsigned char *rgb)   // [in] rgb data
            // printf("\n\n g:%d \n", g);
         }
         //printf("\n\n r:%d \n", r);
+    }
+}
+
+/*
+ * create Grayscale image
+ */
+void createGrayScale(unsigned char *image) {
+    printf("\n\createGrayScale() \n");
+    int j = 0;
+    for (int i=0; i< 256; i++) {
+        image[j++] = i;
+        image[j++] = i;
+        image[j++] = i;
+    }
+}
+
+/*
+ * create Red image
+ */
+void createRedScale(unsigned char *image) {
+    printf("\n\createRedScale() \n");
+    int j = 0;
+    for (int i=0; i< 256; i++) {
+        image[j++] = i;
+        image[j++] = 0;
+        image[j++] = 0;
+    }
+}
+
+/*
+ * create Green image
+ */
+void createGreenScale(unsigned char *image) {
+    printf("\n\createGreenScale() \n");
+    int j = 0;
+    for (int i=0; i< 256; i++) {
+        image[j++] = 0;
+        image[j++] = i;
+        image[j++] = 0;
+    }
+}
+
+/*
+ * create Blue image
+ */
+void createBlueScale(unsigned char *image) {
+    printf("\n\createBlueScale() \n");
+    int j = 0;
+    for (int i=0; i< 256; i++) {
+        image[j++] = 0;
+        image[j++] = 0;
+        image[j++] = i;
     }
 }
 
