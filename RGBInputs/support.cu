@@ -16,15 +16,10 @@ void generateRGBImage(unsigned char *rgb)   // [in] rgb data
     for (int r=0; r< 25; r++) {
         for (int g=0; g< 25; g++) {
             for (int b=0; b< 25; b++) {
-                if(b % 10 == 0){
-                    //printf("[r:%d g:%d b:%d] ", r, g, b);
-                    rgb[i] = r;
-                    i+=1;
-                    rgb[i] = g;
-                    i+=1;
-                    rgb[i] = b;
-                    i+=1;
-                }
+                //printf("[r:%d g:%d b:%d] ", r, g, b);
+                rgb[i++] = r;
+                rgb[i++] = g;
+                rgb[i++] = b;
             }
            // printf("\n\n g:%d \n", g);
         }
