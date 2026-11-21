@@ -24,17 +24,19 @@ __global__ void kernel(unsigned char* src_lut,              // [in] source look 
     if(i < (height * rowSize - 2)) {
 
         if(image[i] != 0 && image[i+1] != 0 && image[i+2] != 0) {
-            unsigned char r = (unsigned char)(((float)image[i]/(float)255));
-            unsigned char g = (unsigned char)(((float)image[i+1]/(float)255));
-            unsigned char b = (unsigned char)(((float)image[i+2]/(float)255));
+            unsigned char r = (unsigned char)(((float)image[i]*(float)25/(float)255));
+            unsigned char g = (unsigned char)(((float)image[i+1]*(float)25/(float)255));
+            unsigned char b = (unsigned char)(((float)image[i+2]*(float)25/(float)255));
 
             int j = (r * 25 * 25 + g * 25 + b) * 3;
             j = (j>=lut_size-3)? lut_size-3:j;
 
-            printf("j:%d\n",j);
+            //printf("j:%d\n",j);
             unsigned char rr = des_lut[j];
             unsigned char gg = des_lut[j+1];
             unsigned char bb = des_lut[j+2];
+
+            //printf("i:%d r:%d g:%d b%d rr:%d gg:%d bb%d \n", i, (int)r, (int)g, (int)b, (int)rr, (int)gg, (int)bb);
 
             image[i] = (unsigned char)((float)rr*(float)255/(float)25);
             image[i+1] = (unsigned char)((float)gg*(float)255/(float)25);
@@ -91,7 +93,7 @@ void deviceLookUpTable( unsigned char* src_lut,              // [in] source look
     /*
      * !Need to handle image bigger than maxGridSize !
      */
-     printf("GridSizeNeeded:%d maxThreadsPerBlock:%d \n", GridSizeNeeded, maxThreadsPerBlock);
+     //printf("GridSizeNeeded:%d maxThreadsPerBlock:%d \n", GridSizeNeeded, maxThreadsPerBlock);
     kernel<<<GridSizeNeeded,maxThreadsPerBlock>>>(device_src_lut, device_des_lut, lut_size, device_image, width, height, rowSize);   
     
     // host to device memory
