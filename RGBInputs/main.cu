@@ -63,7 +63,7 @@ int main (int argc, char *argv[])
     /*
      * Read rgb.raw file -- change to look up table file someday ?
      */
-    readBinaryFile(des_lut, LUT_ARRAY_SIZE, DES_LUT_FILE_PATH);
+    readBinaryFile(des_lut, LUT_ARRAY_SIZE, SRC_LUT_FILE_PATH);
 
     /*
      * Do Image processing with above LUTs (or profiles info or BPN weights)
