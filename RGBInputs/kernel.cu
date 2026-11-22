@@ -28,15 +28,15 @@ __global__ void kernel(unsigned char* src_lut,              // [in] source look 
             unsigned char g = (unsigned char)(((float)image[i+1]*(float)25/(float)255));
             unsigned char b = (unsigned char)(((float)image[i+2]*(float)25/(float)255));
 
+            // calculate index into lut
             int j = (r * 25 * 25 + g * 25 + b) * 3;
             j = (j>=lut_size-3)? lut_size-3:j;
 
-            //printf("j:%d\n",j);
-            unsigned char rr = des_lut[j];
-            unsigned char gg = des_lut[j+1];
-            unsigned char bb = des_lut[j+2];
+            unsigned char rr = des_lut[j]<=25?des_lut[j]:25;
+            unsigned char gg = des_lut[j+1]<=25?des_lut[j+1]:25;
+            unsigned char bb = des_lut[j+2]<=25?des_lut[j+2]:25;
 
-            //printf("i:%d r:%d g:%d b%d rr:%d gg:%d bb%d \n", i, (int)r, (int)g, (int)b, (int)rr, (int)gg, (int)bb);
+            //printf("i:%d r:%d g:%d b%d j:%d rr:%d gg:%d bb:%d \n", i, (int)r, (int)g, (int)b, j, (int)rr, (int)gg, (int)bb);
 
             image[i] = (unsigned char)((float)rr*(float)255/(float)25);
             image[i+1] = (unsigned char)((float)gg*(float)255/(float)25);
