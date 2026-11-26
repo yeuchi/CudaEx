@@ -22,14 +22,18 @@ Generates bitmap test images: R, G, B, Gray 256 x 1
 4. Call device function, call kernel.
 5. Save bitmap to file as 'processed.bmp'
 
+> ./rgb snail.bmp
+<img width="400" alt="Screenshot 2026-11-15 at 6 11 43 PM" src="https://github.com/user-attachments/assets/18fca256-2c46-45fd-9bcc-7e1fd498622b" />
+
 ## UnifiedMem 
 Clone of RGBInputs project with use of UnifiedMemory
+> ./unified maxres.bmp
+<img width="400"  alt="Screenshot 2026-11-25 at 6 06 45 PM" src="https://github.com/user-attachments/assets/5cacaf96-1736-417f-a4d6-6e0120a128a6" />
 
 ## PinnedMem
 Clone of RGBInputs project with use of PinnedMem
-
-> ./rgb snail.bmp
-<img width="400" alt="Screenshot 2026-11-15 at 6 11 43 PM" src="https://github.com/user-attachments/assets/18fca256-2c46-45fd-9bcc-7e1fd498622b" />
+> ./pin snail.bmp
+<img width="400" alt="Screenshot 2026-11-25 at 6 07 20 PM" src="https://github.com/user-attachments/assets/3e6e1453-b9ef-4d66-b2db-dec0563d0e8c" />
 
 # Reference
 1. Stephen Smith's Blog, Playing with CUDA on My NVIDIA Jetson Nano, June 20, 2020
