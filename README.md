@@ -12,12 +12,21 @@ Original Back propagation neural network (1 hidden layer) for color mapping from
 It was written to run on a CPU. 
 Training generally took 4+ hours.
 
+## Test 
+Generates bitmap test images: R, G, B, Gray 256 x 1
+   
 ## RGBInputs 
 1. Generates a raw binary from (0,0,0) -> (25,25,25); input look up table.
 2. Reads a raw binary destination look up table.
 3. Loads a specified bitmap for image processing.
 4. Call device function, call kernel.
 5. Save bitmap to file as 'processed.bmp'
+
+## UnifiedMem 
+Clone of RGBInputs project with use of UnifiedMemory
+
+## PinnedMem
+Clone of RGBInputs project with use of PinnedMem
 
 > ./rgb snail.bmp
 <img width="400" alt="Screenshot 2026-11-15 at 6 11 43 PM" src="https://github.com/user-attachments/assets/18fca256-2c46-45fd-9bcc-7e1fd498622b" />
