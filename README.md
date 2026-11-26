@@ -32,3 +32,9 @@ https://library.imaging.org/cic/articles/1/1/art00010
 3. Variable Rectilinear interpolation \
 https://www.imaging.org/common/uploaded%20files/pdfs/Papers/1998/RP-0-69/2210.pdf
 
+4. TIFF Target C++ code \
+https://github.com/yeuchi/ColorVolumeTargets
+
+5. Colorbration - color space conversions
+https://github.com/yeuchi/colorbration/tree/master/android
+
