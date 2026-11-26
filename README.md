@@ -14,6 +14,8 @@ Training generally took 4+ hours.
 
 ## Test 
 Generates bitmap test images: R, G, B, Gray 256 x 1
+> ./test
+<img width="400" alt="Screenshot 2026-11-25 at 6 09 15 PM" src="https://github.com/user-attachments/assets/01d03fdc-9d2f-417c-9d79-410c27f604d4" />
    
 ## RGBInputs 
 1. Generates a raw binary from (0,0,0) -> (25,25,25); input look up table.
