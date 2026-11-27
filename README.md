@@ -29,11 +29,13 @@ Generates bitmap test images: R, G, B, Gray 256 x 1
 
 ## UnifiedMem 
 Clone of RGBInputs project with use of UnifiedMemory
+Changed bitmap load into ReadBmpInfo(), ReadBmp() 
 > ./unified maxres.bmp
 <img width="400"  alt="Screenshot 2026-11-25 at 6 06 45 PM" src="https://github.com/user-attachments/assets/5cacaf96-1736-417f-a4d6-6e0120a128a6" />
 
 ## PinnedMem
 Clone of RGBInputs project with use of PinnedMem
+Changed bitmap load into ReadBmpInfo(), ReadBmp()
 > ./pin snail.bmp
 <img width="400" alt="Screenshot 2026-11-25 at 6 07 20 PM" src="https://github.com/user-attachments/assets/3e6e1453-b9ef-4d66-b2db-dec0563d0e8c" />
 
