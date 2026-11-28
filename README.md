@@ -39,6 +39,13 @@ Changed bitmap load into ReadBmpInfo(), ReadBmp()
 > ./pin snail.bmp
 <img width="400" alt="Screenshot 2026-11-25 at 6 07 20 PM" src="https://github.com/user-attachments/assets/3e6e1453-b9ef-4d66-b2db-dec0563d0e8c" />
 
+## DoubleBuffer
+Clone of PinnedMem project to implement CoddyKit's code. 
+Changed bitmap load into ReadBmpInfo(), ReadBmp()
+> ./doublebuf snail.bmp
+<img width="371" height="660" alt="Screenshot 2026-11-28 at 11 10 40 AM" src="https://github.com/user-attachments/assets/175617d4-3a1e-4a8e-867c-8a24283422b6" />
+
+
 ## Parallel BPN by geromidg
 Modified project to serve our configuration (RGB) \
 Improved accuracy with less nodes ? \
@@ -68,4 +75,7 @@ https://github.com/yeuchi/colorbration/tree/master/android
 
 6. Parallel training BPN by geromidg, Github
 https://github.com/geromidg/backpropagation_cuda
+
+7. Double Buffer Example, Coddykit
+https://www.coddykit.com/courses/learn_cuda/the-double-buffering-pipeline-12275510
 
