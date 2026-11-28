@@ -39,6 +39,17 @@ Changed bitmap load into ReadBmpInfo(), ReadBmp()
 > ./pin snail.bmp
 <img width="400" alt="Screenshot 2026-11-25 at 6 07 20 PM" src="https://github.com/user-attachments/assets/3e6e1453-b9ef-4d66-b2db-dec0563d0e8c" />
 
+## Parallel BPN by geromidg
+Modified project to serve our configuration (RGB) \
+Improved accuracy with less nodes ? \
+
+#define NETWORK_CONFIGURATION {3, 1000, 3} \
+<img width="574" height="252" alt="Screenshot 2026-11-27 at 6 56 37 PM" src="https://github.com/user-attachments/assets/c9584848-5b4e-4bf0-89ee-464e77d3800d" />
+
+#define NETWORK_CONFIGURATION {3, 600, 3} \
+<img width="243" height="132" alt="Screenshot 2026-11-27 at 6 49 07 PM" src="https://github.com/user-attachments/assets/b4d72ae1-74e5-42ba-bcd0-12e00a073aed" />
+
+
 # Reference
 1. Stephen Smith's Blog, Playing with CUDA on My NVIDIA Jetson Nano, June 20, 2020
 https://smist08.wordpress.com/2019/04/03/playing-with-cuda-on-my-nvidia-jetson-nano/
@@ -54,4 +65,7 @@ https://github.com/yeuchi/ColorVolumeTargets
 
 5. Colorbration - color space conversions
 https://github.com/yeuchi/colorbration/tree/master/android
+
+6. Parallel training BPN by geromidg, Github
+https://github.com/geromidg/backpropagation_cuda
 
