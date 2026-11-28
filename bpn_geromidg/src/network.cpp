@@ -1,0 +1,57 @@
+#include <stdlib.h>
+
+#include "network.h"
+
+Network::Network(const int& total_layer_num, const int* configuration,
+      const float& gamma, const float& alpha,
+      const int& thread_num):
+  layer_num_(total_layer_num - 1)
+{
+  layers_ = new Layer*[layer_num_];
+
+  for (int i = 0; i < layer_num_; i++)
+    layers_[i] = new Layer(configuration[i], configuration[i + 1],
+      gamma, alpha, thread_num);
+}
+
+Network::~Network(void)
+{
+  if (layers_)
+  {
+    for (int i = 0; i < layer_num_; i++)
+      delete layers_[i];
+
+    delete[] layers_;
+  }
+}
+
+float* Network::getNetworkOutput(void)
+{
+  return layers_[layer_num_ - 1]->getLayerOutput();
+}
+
+void Network::propagate(const float *input)
+{
+  //printf("Network propagate() \n");
+  layers_[0]->processNeurons(input);
+
+  for (int i = 1; i < layer_num_; i++)
+    layers_[i]->processNeurons(layers_[i - 1]->getLayerOutput());
+  //printf("Network propagate() done \n");
+}
+
+void Network::train(const float *input, const float *expected_output)
+{
+  //printf("Network train() \n");
+
+  propagate(input);
+
+  //printf("Network train() layer_error\n");
+
+  float layer_error = layers_[layer_num_ - 1]->trainLayer(input, expected_output);
+
+  //printf("Network train() loop layer_error\n");
+
+  for (int i = (layer_num_ - 2); i >= 0; i--)
+    layer_error = layers_[i]->trainLayer(input, layer_error);
+}
